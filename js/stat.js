@@ -7,12 +7,14 @@ var CLOUD = {
   H: 270,
   SHADOW_GAP: 10
 };
+
 var COLOR = {
-  CLOUD: '#ffffff',
-  SHADOW: 'rgba(0, 0, 0, 0.7)',
-  TEXT: '#000000',
-  PLAYER: 'rgba(255, 0, 0, 1)'
+  WHITE: '#ffffff',
+  GRAY: 'rgba(0, 0, 0, 0.7)',
+  BLACK: '#000000',
+  RED: 'rgba(255, 0, 0, 1)'
 };
+
 var TEXT = {
   STYLE: '16px PT Mono',
   LINE_HEIGHT: 20,
@@ -25,15 +27,20 @@ var HISTOGRAM = {
   GAP: 50
 };
 
-function getRandomInt(min, max) {
+var Message = {
+  YOUR_RESULT: 'Ура! Вы победили!',
+  RESULTS_TITLE: 'Список результатов:'
+};
+
+var getRandomInt = function (min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 
 var getHistogramColor = function () {
-  var saturate = getRandomInt(0, 100);
-  return 'hsl(240, ' + saturate + '%, 50%)';
+  var saturation = getRandomInt(0, 100);
+  return 'hsl(240, ' + saturation + '%, 50%)';
 };
 
 var getMaxElement = function (arr) {
@@ -46,45 +53,48 @@ var getMaxElement = function (arr) {
   return max;
 };
 
+var getPlayerColor = function (name) {
+  return (name === 'Вы') ? COLOR.RED : getHistogramColor();
+};
+
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, CLOUD.W, CLOUD.H);
 };
 
-window.renderStatistics = function (ctx, names, times) {
-  renderCloud(ctx, CLOUD.X + CLOUD.SHADOW_GAP, CLOUD.Y + CLOUD.SHADOW_GAP, COLOR.SHADOW);
-  renderCloud(ctx, CLOUD.X, CLOUD.Y, COLOR.CLOUD);
+var renderScore = function (ctx, x, name, time, maxTime) {
+  var playerScore;
+  var playerPosY;
+  var histogramPosY = TEXT.LINE_HEIGHT * 5;
 
-  ctx.fillStyle = COLOR.TEXT;
+  playerScore = Math.floor((HISTOGRAM.SIZE * time) / maxTime);
+  playerPosY = histogramPosY + (HISTOGRAM.SIZE - playerScore);
+
+  ctx.fillStyle = COLOR.BLACK;
+  ctx.fillText(Math.floor(time), x, playerPosY - (TEXT.LINE_HEIGHT / 2));
+
+  ctx.fillStyle = getPlayerColor(name);
+  ctx.fillRect(x, playerPosY, HISTOGRAM.WIDTH, playerScore);
+
+  ctx.fillStyle = COLOR.BLACK;
+  ctx.fillText(name, x, histogramPosY + HISTOGRAM.SIZE + TEXT.LINE_HEIGHT);
+};
+
+window.renderStatistics = function (ctx, names, times) {
+  renderCloud(ctx, CLOUD.X + CLOUD.SHADOW_GAP, CLOUD.Y + CLOUD.SHADOW_GAP, COLOR.GRAY);
+  renderCloud(ctx, CLOUD.X, CLOUD.Y, COLOR.WHITE);
+
+  ctx.fillStyle = COLOR.BLACK;
   ctx.font = TEXT.STYLE;
-  ctx.fillText('Ура! Вы победили!', CLOUD.X + TEXT.GAP, CLOUD.Y + TEXT.LINE_HEIGHT * 2);
-  ctx.fillText('Список результатов:', CLOUD.X + TEXT.GAP, CLOUD.Y + TEXT.LINE_HEIGHT * 3);
+  ctx.fillText(Message.YOUR_RESULT, CLOUD.X + TEXT.GAP, CLOUD.Y + TEXT.LINE_HEIGHT * 2);
+  ctx.fillText(Message.RESULTS_TITLE, CLOUD.X + TEXT.GAP, CLOUD.Y + TEXT.LINE_HEIGHT * 3);
 
   var maxTime = getMaxElement(times);
-
-  var getScore = function (time) {
-    return Math.floor((HISTOGRAM.SIZE * time) / maxTime);
-  };
-
-  var renderScore = function (name, time) {
-    playerScore = getScore(time);
-    playerPosY = histogramPosY + (HISTOGRAM.SIZE - playerScore);
-    ctx.fillStyle = COLOR.TEXT;
-    ctx.fillText(Math.floor(time), histogramPosX, playerPosY - (TEXT.LINE_HEIGHT / 2));
-    ctx.fillStyle = (name === 'Вы') ? COLOR.PLAYER : getHistogramColor();
-    ctx.fillRect(histogramPosX, playerPosY, HISTOGRAM.WIDTH, playerScore);
-    ctx.fillStyle = COLOR.TEXT;
-    ctx.fillText(name, histogramPosX, histogramPosY + HISTOGRAM.SIZE + TEXT.LINE_HEIGHT);
-  };
-
-  var histogramPosX = CLOUD.X;
-  var histogramPosY = TEXT.LINE_HEIGHT * 5;
-  var playerPosY = 0;
-  var playerScore = 0;
+  var posX = CLOUD.X;
 
   for (var i = 0; i < names.length; i++) {
-    histogramPosX += HISTOGRAM.GAP;
-    renderScore(names[i], times[i]);
-    histogramPosX += HISTOGRAM.WIDTH;
+    posX += HISTOGRAM.GAP;
+    renderScore(ctx, posX, names[i], times[i], maxTime);
+    posX += HISTOGRAM.WIDTH;
   }
 };
