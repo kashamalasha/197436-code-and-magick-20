@@ -57,9 +57,9 @@ var getPlayerColor = function (name) {
   return (name === 'Вы') ? COLOR.RED : getHistogramColor();
 };
 
-var renderCloud = function (ctx, x, y, color) {
+var renderRect = function (ctx, x, y, width, height, color) {
   ctx.fillStyle = color;
-  ctx.fillRect(x, y, CLOUD.W, CLOUD.H);
+  ctx.fillRect(x, y, width, height);
 };
 
 var renderScore = function (ctx, x, name, time, maxTime) {
@@ -73,16 +73,15 @@ var renderScore = function (ctx, x, name, time, maxTime) {
   ctx.fillStyle = COLOR.BLACK;
   ctx.fillText(Math.floor(time), x, playerPosY - (TEXT.LINE_HEIGHT / 2));
 
-  ctx.fillStyle = getPlayerColor(name);
-  ctx.fillRect(x, playerPosY, HISTOGRAM.WIDTH, playerScore);
+  renderRect(ctx, x, playerPosY, HISTOGRAM.WIDTH, playerScore, getPlayerColor(name));
 
   ctx.fillStyle = COLOR.BLACK;
   ctx.fillText(name, x, histogramPosY + HISTOGRAM.SIZE + TEXT.LINE_HEIGHT);
 };
 
 window.renderStatistics = function (ctx, names, times) {
-  renderCloud(ctx, CLOUD.X + CLOUD.SHADOW_GAP, CLOUD.Y + CLOUD.SHADOW_GAP, COLOR.GRAY);
-  renderCloud(ctx, CLOUD.X, CLOUD.Y, COLOR.WHITE);
+  renderRect(ctx, CLOUD.X + CLOUD.SHADOW_GAP, CLOUD.Y + CLOUD.SHADOW_GAP, CLOUD.W, CLOUD.H, COLOR.GRAY);
+  renderRect(ctx, CLOUD.X, CLOUD.Y, CLOUD.W, CLOUD.H, COLOR.WHITE);
 
   ctx.fillStyle = COLOR.BLACK;
   ctx.font = TEXT.STYLE;
