@@ -1,6 +1,6 @@
 'use strict';
 
-var PLAYER_QTY = 4;
+var PLAYERS_QUANTITY = 4;
 
 var FIRST_NAMES = [
   'Иван',
@@ -59,27 +59,26 @@ var getRandomFromArray = function (arr) {
   return arr[getRandomInt(0, arr.length - 1)];
 };
 
-var getFullName = function (mode) {
-  var fullName;
-
-  switch (mode) {
-    case 1:
-      fullName = getRandomFromArray(FIRST_NAMES) + ' ' + getRandomFromArray(SECOND_NAMES);
-      break;
-    case 2:
-      fullName = getRandomFromArray(SECOND_NAMES) + ' ' + getRandomFromArray(FIRST_NAMES);
-      break;
-  }
-
-  return fullName;
+var shuffleArray = function (arr) {
+  var randomComparator = function () {
+    return 0.5 - Math.random();
+  };
+  return arr.slice().sort(randomComparator);
 };
+
+var getRandomName = function () {
+  return shuffleArray([
+    getRandomFromArray(FIRST_NAMES),
+    getRandomFromArray(SECOND_NAMES)
+  ]).join(' ');
+}
 
 var generateWizards = function (qty) {
   var arr = [];
 
   for (var i = 0; i < qty; i++) {
     arr.push({
-      name: getFullName(getRandomInt(1, 2)),
+      name: getRandomName(),
       coatColor: getRandomFromArray(COAT_COLORS),
       eyeColor: getRandomFromArray(EYE_COLORS)
     });
@@ -102,18 +101,20 @@ var renderWizard = function (proto) {
   return wizard;
 };
 
-var renderWizards = function (listElement) {
+var renderWizards = function (arr) {
   var fragment = document.createDocumentFragment();
-  var playersArray = generateWizards(PLAYER_QTY);
 
-  for (var j = 0; j < playersArray.length; j++) {
-    listElement.appendChild(renderWizard(playersArray[j]));
+  for (var i = 0; i < arr.length; i++) {
+    fragment.appendChild(renderWizard(arr[i]));
   }
 
-  return fragment.appendChild(listElement);
+  return fragment;
 };
 
-similarElement.appendChild(renderWizards(similarListElement));
+var playersArray = generateWizards(PLAYERS_QUANTITY);
+
+similarListElement.appendChild(renderWizards(playersArray));
+similarElement.appendChild(similarListElement);
 
 similarElement.classList.remove('hidden');
 setupDialog.classList.remove('hidden');
