@@ -17,6 +17,9 @@
   var openPopup = function () {
     setupDialog.classList.remove('hidden');
 
+    setupDialog.style.left = '';
+    setupDialog.style.top = '';
+
     document.addEventListener('keydown', onPopupEscPress);
   };
 
