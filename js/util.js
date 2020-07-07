@@ -1,8 +1,8 @@
 'use strict';
 
-window.util = (function () {
+(function () {
 
-  var Keys = {
+  var Key = {
     ENTER: {
       keyCode: 13,
       keyName: 'Enter'
@@ -14,14 +14,14 @@ window.util = (function () {
   };
 
   var isEscEvent = function (evt, action) {
-    if (evt.keyCode === Keys.ESCAPE.keyCode) {
+    if (evt.keyCode === Key.ESCAPE.keyCode) {
       evt.preventDefault();
       action();
     }
   };
 
   var isEnterEvent = function (evt, action) {
-    if (evt.keyCode === Keys.ENTER.keyCode) {
+    if (evt.keyCode === Key.ENTER.keyCode) {
       action();
     }
   };
@@ -43,7 +43,7 @@ window.util = (function () {
     return arr.slice().sort(randomComparator);
   };
 
-  return {
+  window.util = {
     isEscEvent: isEscEvent,
     isEnterEvent: isEnterEvent,
     getRandomInt: getRandomInt,

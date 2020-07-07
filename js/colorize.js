@@ -1,8 +1,11 @@
 'use strict';
 
-window.colorize = (function () {
+(function () {
 
-  var ColorNames = {
+  var REGEX_RGB = /^rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)$/i;
+  var REGEX_HEX = /^#([0-9A-F]{3}){1,2}$/i;
+
+  var Color = {
     BLACK: {
       rgb: 'rgb(0, 0, 0)'
     },
@@ -33,8 +36,6 @@ window.colorize = (function () {
 
   var setNewColor = function (element, colors) {
     var newColor = window.util.getRandomFromArray(colors);
-    var regexRGB = /^rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)$/i;
-    var regexHex = /^#([0-9A-F]{3}){1,2}$/i;
     var isSimilar = false;
     var currentColor;
 
@@ -44,10 +45,10 @@ window.colorize = (function () {
       currentColor = window.getComputedStyle(element).fill;
     }
 
-    if (regexHex.test(newColor)) {
+    if (REGEX_HEX.test(newColor)) {
       isSimilar = (currentColor === hexToRGB(newColor));
-    } else if (!regexRGB.test(newColor)) {
-      isSimilar = (currentColor === ColorNames.fromId(newColor).rgb);
+    } else if (!REGEX_RGB.test(newColor)) {
+      isSimilar = (currentColor === Color.fromId(newColor).rgb);
     } else {
       isSimilar = (currentColor === newColor);
     }
@@ -60,15 +61,15 @@ window.colorize = (function () {
     return newColor;
   };
 
-  return function (element, colors, inputName) {
-    element.addEventListener('click', function () {
-      var newColor = setNewColor(element, colors);
-      if (element.tagName.toLowerCase() === 'div') {
-        element.style.backgroundColor = newColor;
+  window.colorize = function (obj, colors) {
+    obj.element.addEventListener('click', function () {
+      var newColor = setNewColor(obj.element, colors);
+      if (obj.element.tagName.toLowerCase() === 'div') {
+        obj.element.style.backgroundColor = newColor;
       } else {
-        element.style.fill = newColor;
+        obj.element.style.fill = newColor;
       }
-      document.querySelector('input[name="' + inputName + '"]').value = newColor;
+      obj.input.value = newColor;
     });
   };
 

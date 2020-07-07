@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var CLOUD = {
     X: 100,
     Y: 10,
@@ -99,4 +100,5 @@
       posX += HISTOGRAM.WIDTH;
     }
   };
+
 })();

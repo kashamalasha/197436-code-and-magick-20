@@ -1,7 +1,8 @@
 'use strict';
 
-window.validate = (function () {
-  return function (input) {
+(function () {
+
+  var formInput = function (input) {
     input.addEventListener('invalid', function () {
       if (input.validity.tooShort) {
         input.setCustomValidity('Имя должно состоять минимум из 2-х символов');
@@ -14,4 +15,9 @@ window.validate = (function () {
       }
     });
   };
+
+  window.validate = {
+    formInput: formInput
+  };
+
 })();
