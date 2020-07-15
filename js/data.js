@@ -56,14 +56,14 @@
     ]).join(' ');
   };
 
-  var generateWizards = function (qty) {
+  var generateWizards = function (quantity) {
     var arr = [];
 
-    for (var i = 0; i < qty; i++) {
+    for (var i = 0; i < quantity; i++) {
       arr.push({
         name: getRandomName(),
-        coatColor: window.util.getRandomFromArray(COAT_COLORS),
-        eyeColor: window.util.getRandomFromArray(EYE_COLORS)
+        colorCoat: window.util.getRandomFromArray(COAT_COLORS),
+        colorEyes: window.util.getRandomFromArray(EYE_COLORS)
       });
     }
 
