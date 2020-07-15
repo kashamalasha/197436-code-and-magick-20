@@ -6,7 +6,7 @@
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = setupDialog.querySelector('.setup-close');
   var inputUserName = setupDialog.querySelector('.setup-user-name');
-  var setupFormSubmit = setupDialog.querySelector('.setup-submit');
+  var setupForm = setupDialog.querySelector('.setup-wizard-form');
 
   var onPopupEscPress = function (evt) {
     if (document.activeElement !== inputUserName) {
@@ -29,6 +29,11 @@
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
+  var onSetupFormSubmit = function (evt) {
+    window.backend.save(new FormData(setupForm), closePopup);
+    evt.preventDefault();
+  };
+
   setupOpen.addEventListener('click', function () {
     openPopup();
   });
@@ -45,10 +50,8 @@
     window.util.isEnterEvent(evt, closePopup);
   });
 
-  setupFormSubmit.addEventListener('keydown', function (evt) {
-    window.util.isEnterEvent(evt,
-        setupDialog.querySelector('.setup-wizard-dialog').submit()
-    );
+  setupForm.addEventListener('submit', function (evt) {
+    onSetupFormSubmit(evt);
   });
 
 })();
