@@ -40,8 +40,8 @@
     var wizardEyes = wizard.querySelector('.wizard-eyes');
 
     wizardName.textContent = proto.name;
-    wizardCoat.style.fill = proto.coatColor;
-    wizardEyes.style.fill = proto.eyeColor;
+    wizardCoat.style.fill = proto.colorCoat;
+    wizardEyes.style.fill = proto.colorEyes;
 
     return wizard;
   };
@@ -56,12 +56,26 @@
     return fragment;
   };
 
-  var playersArray = window.data.generateWizards(PLAYERS_QUANTITY);
+  var onError = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
 
-  similarListElement.appendChild(renderWizards(playersArray));
-  similarElement.appendChild(similarListElement);
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
 
-  similarElement.classList.remove('hidden');
+  var onSuccess = function (arr) {
+    var similarWizards = arr.slice(0, PLAYERS_QUANTITY);
+    similarListElement.appendChild(renderWizards(similarWizards));
+    similarElement.appendChild(similarListElement);
+    similarElement.classList.remove('hidden');
+  };
+
+  window.backend.load(onSuccess, onError);
 
   window.validate.formInput(inputUserName);
 
