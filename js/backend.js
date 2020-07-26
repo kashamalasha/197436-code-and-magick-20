@@ -13,7 +13,7 @@
     OK: 200
   };
 
-  var createRequest = function (method, url, data, onLoad, onError) {
+  var createRequest = function (method, url, onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -38,15 +38,18 @@
 
     xhr.timeout = TIMEOUT;
     xhr.open(method, url);
-    xhr.send(data);
+
+    return xhr;
   };
 
   var load = function (onLoad, onError) {
-    createRequest('GET', Url.LOAD, null, onLoad, onError);
+    var xhr = createRequest('GET', Url.LOAD, onLoad, onError);
+    xhr.send();
   };
 
   var save = function (data, onLoad, onError) {
-    createRequest('POST', Url.SAVE, data, onLoad, onError);
+    var xhr = createRequest('POST', Url.SAVE, onLoad, onError);
+    xhr.send(data);
   };
 
   window.backend = {
