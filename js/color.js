@@ -63,7 +63,7 @@
     return newColor;
   };
 
-  window.colorize = function (obj, colors) {
+  var colorize = function (obj, colors) {
     obj.element.addEventListener('click', function () {
       var newColor = setNewColor(obj.element, colors);
       if (obj.element.tagName.toLowerCase() === 'div') {
@@ -72,7 +72,16 @@
         obj.element.style.fill = newColor;
       }
       obj.input.value = newColor;
+
+      var updateSimilarWizards = window.domUtil.debounce(window.wizard.updateWizards);
+      updateSimilarWizards();
     });
+  };
+
+  window.color = {
+    colorize: colorize,
+    getCurrentColor: getCurrentColor,
+    Color: Color
   };
 
 })();

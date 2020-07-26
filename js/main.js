@@ -2,12 +2,8 @@
 
 (function () {
 
-  var PLAYERS_QUANTITY = 4;
-
   var setupDialog = document.querySelector('.setup');
   var inputUserName = setupDialog.querySelector('.setup-user-name');
-  var similarElement = document.querySelector('.setup-similar');
-  var similarListElement = document.querySelector('.setup-similar-list');
 
   var onError = function (errorMessage) {
     var node = document.createElement('div');
@@ -22,14 +18,15 @@
   };
 
   var onSuccess = function (arr) {
-    var similarWizards = arr.slice(0, PLAYERS_QUANTITY);
-    similarListElement.appendChild(window.wizard.renderWizards(similarWizards));
-    similarElement.appendChild(similarListElement);
-    similarElement.classList.remove('hidden');
+    window.wizard.wizards = arr;
+    window.wizard.updateWizards();
   };
 
   window.backend.load(onSuccess, onError);
-
   window.validate.formInput(inputUserName);
+
+  window.color.colorize(window.wizard.wizardElements.coat, window.wizard.COAT_COLORS);
+  window.color.colorize(window.wizard.wizardElements.eyes, window.wizard.EYE_COLORS);
+  window.color.colorize(window.wizard.wizardElements.fireball, window.wizard.FIREBALL_COLORS);
 
 })();
