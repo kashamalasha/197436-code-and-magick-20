@@ -73,7 +73,7 @@
       }
       obj.input.value = newColor;
 
-      var updateSimilarWizards = window.domUtil.debounce(window.wizard.updateWizards);
+      var updateSimilarWizards = window.util.debounce(window.wizard.updateWizards);
       updateSimilarWizards();
     });
   };

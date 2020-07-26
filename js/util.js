@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_INTERVAL = 3000;
 
   var Key = {
     ENTER: {
@@ -43,12 +44,25 @@
     return arr.slice().sort(randomComparator);
   };
 
+  var debounce = function (callback) {
+    var lastTimeout = null;
+    return function () {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        callback.apply(null, arguments);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
   window.util = {
     isEscEvent: isEscEvent,
     isEnterEvent: isEnterEvent,
     getRandomInt: getRandomInt,
     getRandomFromArray: getRandomFromArray,
-    getShuffledArray: getShuffledArray
+    getShuffledArray: getShuffledArray,
+    debounce: debounce
   };
 
 })();
