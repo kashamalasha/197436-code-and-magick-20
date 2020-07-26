@@ -34,16 +34,18 @@
     return 'rgb(' + +r + ', ' + +g + ', ' + +b + ')';
   };
 
+  var getCurrentColor = function (element) {
+    if (element.tagName.toLowerCase() === 'div') {
+      return window.getComputedStyle(element).backgroundColor;
+    } else {
+      return window.getComputedStyle(element).fill;
+    }
+  };
+
   var setNewColor = function (element, colors) {
     var newColor = window.util.getRandomFromArray(colors);
     var isSimilar = false;
-    var currentColor;
-
-    if (element.tagName.toLowerCase() === 'div') {
-      currentColor = window.getComputedStyle(element).backgroundColor;
-    } else {
-      currentColor = window.getComputedStyle(element).fill;
-    }
+    var currentColor = getCurrentColor(element);
 
     if (REGEX_HEX.test(newColor)) {
       isSimilar = (currentColor === hexToRGB(newColor));
